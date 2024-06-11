@@ -1,24 +1,32 @@
-
-
-
 class Solution {
+    int[] dp;
     public int findTargetSumWays(int[] nums, int target) {
-        int idx = nums.length -1 ;
-        return dfs(nums, 0, target,idx);
-        
-    }
-
-     public int dfs(int[] nums, int curr_sum, int target, int idx) {
-        if (idx < 0 && curr_sum == target) {
-            return 1;
+        int total = 0;
+        for (int n : nums) {
+            total += n;
         }
-        if (idx < 0 ) {
+        target = Math.abs(target);
+
+        if ((target + total) % 2 == 1) {
             return 0;
         }
 
-        int positive = dfs(nums, curr_sum + nums[idx], target, idx - 1);
-        int negative = dfs(nums, curr_sum - nums[idx], target, idx - 1);
+        int s1 = (target + total) / 2;
+        dp = new int[s1 + 1];
+        dp[0] = 1;
+        find(nums, 0, s1);
+        return dp[s1];
+    }
 
-        return positive + negative;
+    private void find(int[] nums, int index, int target) {
+        if (index == nums.length) {
+            return;
+        }
+
+        for (int n = target; n >= nums[index]; n--) {
+            dp[n] = dp[n] + dp[n - nums[index]];
+        }
+
+        find(nums, index + 1, target);
     }
 }
