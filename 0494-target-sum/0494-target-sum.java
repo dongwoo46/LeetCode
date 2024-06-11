@@ -12,7 +12,7 @@ class Solution {
         if (idx < 0 && curr_sum == target) {
             return 1;
         }
-        if (idx < 0) {
+        if (idx < 0 ) {
             return 0;
         }
 
