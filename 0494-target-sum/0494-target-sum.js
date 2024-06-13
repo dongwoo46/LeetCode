@@ -4,21 +4,29 @@
  * @return {number}
  */
 var findTargetSumWays = function(nums, target) {
-    const idx = nums.length - 1;
-    return dfs(nums, 0, target, idx);
-};
+    const total = nums.reduce((acc, num) => acc + num, 0);
+    target = Math.abs(target);
 
-function dfs(nums, curr_sum, target, idx) {
-    if (idx < 0 && curr_sum === target) {
-        return 1;
-    }
-
-    if (idx < 0) {
+    if ((target + total) % 2 === 1) {
         return 0;
     }
 
-    let pos = dfs(nums, curr_sum + nums[idx], target, idx - 1);
-    let neg = dfs(nums, curr_sum - nums[idx], target, idx - 1);
+    const s1 = (target + total) / 2;
+    let dp = new Array(s1 + 1).fill(0);
+    dp[0] = 1;
 
-    return pos + neg;
+    dfs(nums, 0, s1, dp);
+    return dp[s1];
+};
+
+function dfs(nums, idx, target, dp) {
+    if (idx === nums.length) {
+        return;
+    }
+
+    for (let n = target; n >= nums[idx]; n--) {
+        dp[n] = dp[n] + dp[n - nums[idx]];
+    }
+
+    dfs(nums, idx + 1, target, dp);
 }
